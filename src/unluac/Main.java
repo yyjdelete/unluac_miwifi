@@ -30,6 +30,7 @@ public class Main {
   public static void main(String[] args) {
     String fn = null;
     Configuration config = new Configuration();
+    config.variable = Configuration.VariableMode.FINDER;
     for(String arg : args) {
       if(arg.startsWith("-")) {
         // option

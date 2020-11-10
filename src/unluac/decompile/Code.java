@@ -24,12 +24,25 @@ public class Code {
     }
     upvalue = new boolean[length];
     if(function.header.version.upvaluedeclarationtype.get() == Version.UpvalueDeclarationType.INLINE) {
-      for(int i = 0; i < length; i++) {
-        int line = i + 1;
+      for(int line = 1; line <= length; line++) {
         if(op(line) == Op.CLOSURE) {
-          int nups = function.functions[Bx(line)].numUpvalues;
-          for(int j = 1; j <= nups; j++) {
-            upvalue[i + j] = true;
+          LFunction f = function.functions[Bx(line)];
+          int nups = f.numUpvalues;
+          for(int j = 0; j < nups; j++) {
+            switch (op(line + j + 1)) {
+              case MOVE:
+                f.upvalues[j].instack = 1;
+                f.upvalues[j].idx = B(line + j + 1);
+                break;
+              case GETUPVAL:
+                f.upvalues[j].instack = 0;
+                f.upvalues[j].idx = B(line + j + 1);
+                break;
+              default:
+                System.err.println("-- Invalid upvalues info for CLOSURE, op=" + op(line + j + 1));
+                break;
+            }
+            upvalue[line + j] = true;
           }
         }
       }

@@ -17,21 +17,25 @@ public class Registers {
   
   private final Declaration[][] decls;
   private final Function f;
-  public final boolean isStrippedDefault;
+  private final boolean isStripped;
   private final Expression[][] values;
   private final int[][] updated;
   
-  public Registers(int registers, int length, Declaration[] declList, Function f, boolean isStrippedDefault) {
+  public Registers(int registers, int length, Declaration[] declList, Function f, boolean isStripped) {
     this.registers = registers;
     this.length = length;
     decls = new Declaration[registers][length + 1];
     for(int i = 0; i < declList.length; i++) {
       Declaration decl = declList[i];
-      int register = 0;
-      while(decls[register][decl.begin] != null) {
-        register++;
+      //register is already set by VariableFinder
+      int register = decl.register;
+      if (register == -1) {
+        register = 0;
+        while(decls[register][decl.begin] != null) {
+          register++;
+        }
+        decl.register = register;
       }
-      decl.register = register;
       for(int line = decl.begin; line <= decl.end; line++) {
         decls[register][line] = decl; 
       }
@@ -45,7 +49,7 @@ public class Registers {
     startedLines = new boolean[length + 1];
     Arrays.fill(startedLines, false);
     this.f = f;
-    this.isStrippedDefault = isStrippedDefault;
+    this.isStripped = isStripped;
   }
   
   public Function getFunction() {
@@ -53,7 +57,7 @@ public class Registers {
   }
   
   public boolean isAssignable(int register, int line) {
-    return isLocal(register, line) && (!decls[register][line].forLoop || isStrippedDefault);
+    return isLocal(register, line) && (!decls[register][line].forLoop || isStripped);
   }
   
   public boolean isLocal(int register, int line) {
@@ -120,11 +124,11 @@ public class Registers {
   }
   
   public Expression getValue(int register, int line) {
-    if(isStrippedDefault) {
-      return getExpression(register, line);
-    } else {
+    //if(isStrippedDefault) {
+    //  return getExpression(register, line);
+    //} else {
       return values[register][line - 1];
-    }
+    //}
   }
 
   public int getUpdated(int register, int line) {
@@ -149,10 +153,10 @@ public class Registers {
       decl = new Declaration("_FOR_", begin, end);
       decl.register = register;
       newDeclaration(decl, register, begin, end);
-      if(!isStrippedDefault) {
+      if(!isStripped) {
         throw new IllegalStateException("TEMP");
       }
-    } else if(isStrippedDefault) {
+    } else if(isStripped) {
       //
     } else {
       if(decl.begin != begin || decl.end != end) {
@@ -170,10 +174,10 @@ public class Registers {
       decl = new Declaration("_FORV_" + register + "_", begin, end);
       decl.register = register;
       newDeclaration(decl, register, begin, end);
-      if(!isStrippedDefault) {
+      if(!isStripped) {
         throw new IllegalStateException("TEMP");
       }
-    } else if(isStrippedDefault) {
+    } else if(isStripped) {
       
     } else {
       if(decl.begin != begin || decl.end != end) {

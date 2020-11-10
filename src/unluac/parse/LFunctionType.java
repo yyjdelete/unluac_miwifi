@@ -125,7 +125,12 @@ abstract public class LFunctionType extends BObjectType<LFunction> {
   protected void create_upvalues(ByteBuffer buffer, BHeader header, LFunctionParseState s) {
     s.upvalues = new LUpvalue[s.lenUpvalues];
     for(int i = 0; i < s.lenUpvalues; i++) {
-      s.upvalues[i] = new LUpvalue();
+      LUpvalue val = new LUpvalue();
+      //will be set latter when init unluac.decompile.Code
+      val.instack = -1;
+      val.idx = -1;
+      val.kind = -1;
+      s.upvalues[i] = val;
     }
   }
   

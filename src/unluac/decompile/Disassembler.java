@@ -65,7 +65,7 @@ public class Disassembler {
     if(function.upvalues.length > 0) {
       for(int upvalue = 1; upvalue <= function.upvalues.length; upvalue++) {
         LUpvalue u = function.upvalues[upvalue - 1];
-        out.println(".upvalue\t" + StringUtils.toPrintString(u.name) + "\t" + u.idx + "\t" + u.instack);
+        out.println(".upvalue\t" + StringUtils.toPrintString(u.name) + "\t" + u.idx + "\t" + (u.instack != 0));
       }
       out.println();
     }

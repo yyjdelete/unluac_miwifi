@@ -9,6 +9,7 @@ import unluac.decompile.Decompiler;
 import unluac.decompile.Output;
 import unluac.decompile.Walker;
 import unluac.decompile.expression.Expression;
+import unluac.decompile.expression.LocalVariable;
 import unluac.decompile.target.Target;
 
 public class Assignment extends Statement {
