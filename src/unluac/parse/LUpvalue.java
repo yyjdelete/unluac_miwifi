@@ -1,8 +1,10 @@
 package unluac.parse;
 
+import java.util.Objects;
+
 public class LUpvalue extends BObject {
 
-  public boolean instack;
+  public int instack;
   public int idx;
   
   public String name;
@@ -15,10 +17,7 @@ public class LUpvalue extends BObject {
       if(!(instack == upvalue.instack && idx == upvalue.idx && kind == upvalue.kind)) {
         return false;
       }
-      if(name == upvalue.name) {
-        return true;
-      }
-      return name != null && name.equals(upvalue.name);
+      return Objects.equals(name, upvalue.name);
     } else {
       return false;
     }

@@ -677,7 +677,7 @@ class AssemblerChunk {
       LUpvalue lup = new LUpvalue();
       lup.bname = convert_string(header, upvalue.name);
       lup.idx = upvalue.index;
-      lup.instack = upvalue.instack;
+      lup.instack = upvalue.instack ? 1 : 0;
       upvalues[i++] = lup;
     }
     LFunction[] functions = new LFunction[function.children.size()];

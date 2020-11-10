@@ -274,7 +274,7 @@ public class ControlFlowHandler {
   }
   
   private static void handle_testset(State state, boolean[] skip, int line, Condition c, int target, int register, boolean invert) {
-    if(state.r.isStrippedDefault && find_loadboolblock(state, target) == -1) {
+    if(state.d.getStrippedDefault() && find_loadboolblock(state, target) == -1) {
       if(invert) c = c.inverse();
       Branch b = new Branch(line, line, Branch.Type.test, c, line + 2, target, null);
       b.target = state.code.A(line);
@@ -958,7 +958,7 @@ public class ControlFlowHandler {
             remove_branch(state, b);
             hanging.pop();
           }
-        } else if(state.function.header.version.usegoto.get() || state.r.isStrippedDefault) {
+        } else if(state.function.header.version.usegoto.get() || state.function.stripped) {
           Goto block = new Goto(state.function, b.line, b.targetFirst);
           if(!hanging.isEmpty() && hanging.peek().targetSecond == b.targetFirst && enclosing_block(state, hanging.peek().line) == enclosing) {
             if(hangingResolver != null && hangingResolver.targetFirst != b.targetFirst) {
@@ -976,7 +976,7 @@ public class ControlFlowHandler {
     resolve_hangers(state, stack, hanging, hangingResolver);
     hangingResolver = null;
     while(!hanging.isEmpty()) {
-      if(state.function.header.version.useifbreakrewrite.get() || state.r.isStrippedDefault) {
+      if(state.function.header.version.useifbreakrewrite.get() || state.function.stripped) {
         // if break (or if goto)
         Branch top = hanging.pop();
         Block breakable = enclosing_breakable_block(state, top.line);
@@ -984,7 +984,7 @@ public class ControlFlowHandler {
           Block block = new IfThenEndBlock(state.function, state.r, top.cond.inverse(), top.targetFirst - 1, top.targetFirst - 1, false);
           block.addStatement(new Break(state.function, top.targetFirst - 1, top.targetSecond));
           state.blocks.add(block);
-        } else if(state.function.header.version.usegoto.get() || state.r.isStrippedDefault) {
+        } else if(state.function.header.version.usegoto.get() || state.function.stripped) {
           Block block = new IfThenEndBlock(state.function, state.r, top.cond.inverse(), top.targetFirst - 1, top.targetFirst - 1, false);
           block.addStatement(new Goto(state.function, top.targetFirst - 1, top.targetSecond));
           state.blocks.add(block);

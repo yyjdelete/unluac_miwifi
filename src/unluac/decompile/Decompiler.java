@@ -822,7 +822,7 @@ public class Decompiler {
     }
     Stack<Block> blockStack = new Stack<Block>();
     blockStack.push(blockContainers.get(blockContainerIndex++));
-    
+    //idx from 1
     state.skip = new boolean[code.length + 1];
     boolean[] skip = state.skip;
     boolean[] labels_handled = new boolean[code.length + 1];

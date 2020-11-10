@@ -7,7 +7,7 @@ public class Declaration {
   public final String name;
   public final int begin;
   public final int end;
-  public int register;
+  public int register = -1;
   public boolean tbc;
   
   /**

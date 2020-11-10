@@ -48,7 +48,7 @@ public class ClosureExpression extends Expression {
     */
     for(int i = 0; i < function.upvalues.length; i++) {
       LUpvalue upvalue = function.upvalues[i];
-      if(upvalue.instack && upvalue.idx == register) {
+      if(upvalue.instack == 1 && upvalue.idx == register) {
         return true;
       }
     }
