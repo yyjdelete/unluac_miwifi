@@ -67,7 +67,20 @@ public class Code {
     if(line >= 2 && extraByte[line - 2]) {
       return Op.EXTRABYTE;
     } else {
-      return map.get(opcode(line));
+      Op opcode = map.get(opcode(line));
+      if (opcode == Op.MAGIC) {
+        int C = C(line);
+        if (C == 0) {
+          opcode = Op.CLOSE;
+        } else if (C == 1) {
+          opcode = Op.LEN;
+        } else if (C == 2) {
+          opcode = Op.UNM;
+        } else if (C == 3) {
+          opcode = Op.NOT;
+        }
+      }
+      return opcode;
     }
   }
   
